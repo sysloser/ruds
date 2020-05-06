@@ -17,15 +17,6 @@ import (
 	"strings"
 )
 
-func detect(url string) string {
-	response, err := http.Get(url)
-	if err != nil {
-		fmt.Println(err)
-	}
-	body, _ := ioutil.ReadAll(response.Body)
-	defer response.Body.Close()
-	return string(body)
-}
 
 func Readfile(filename string) []string {
 	file, err := os.Open(filename)
@@ -50,13 +41,13 @@ func Readfile(filename string) []string {
 }
 
 func IsKeyword1(word string) (b bool) {
-	pattern := "baidu"
+	pattern := "meituan"
 	result, _ := regexp.MatchString(pattern, word)
 	return result
 }
 
 func IsKeyword2(word string) (b bool) {
-	pattern := "百度"
+	pattern := "美团"
 	result, _ := regexp.MatchString(pattern, word)
 	return result
 }
@@ -65,10 +56,16 @@ func main() {
 	filename := os.Args[1]
 	url := Readfile(filename)
 	for _, k := range url {
-		site := detect(k)
-		if IsKeyword1(site) || IsKeyword2(site) {
+		response,err:=http.Get(k)
+		if err != nil{
+			fmt.Printf("The site cannot be opened: %s \n",k)
+		}else{
+			body, _ := ioutil.ReadAll(response.Body)
+		response.Body.Close()
+		if IsKeyword1(string(body)) || IsKeyword2(string(body)) {
 			fmt.Printf("发现钓鱼网站：%s \n", k)
-			continue
 		}
+		}
+		
 	}
 }
