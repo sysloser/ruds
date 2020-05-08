@@ -64,7 +64,9 @@ func main() {
 		response.Body.Close()
 		if IsKeyword1(string(body)) || IsKeyword2(string(body)) {
 			fmt.Printf("发现钓鱼网站：%s \n", k)
-		}
+		}else {
+				fmt.Printf("Ignore: %s \n",k)
+			}
 		}
 		
 	}
